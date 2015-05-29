@@ -22,7 +22,7 @@ public class ControllerContext implements IWebContext {
     }
     @Override
     public VariablesMap<String, Object> getVariables() {
-        VariablesMap<String, Object> ret = new VariablesMap<String, Object>();
+        VariablesMap<String, Object> ret = new VariablesMap<>();
         ret.putAll(model);
         return ret;
     }

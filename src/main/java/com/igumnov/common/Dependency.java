@@ -17,7 +17,7 @@ public class Dependency {
 
     private static ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
 
-    private static HashMap<String, Object> singlentons = new HashMap<String, Object>();
+    private static HashMap<String, Object> singlentons = new HashMap<>();
 
     public static void scan(String prefix) throws IOException, URISyntaxException, ClassNotFoundException, IllegalAccessException, InstantiationException, DependencyException {
         ArrayList<String> classes = Reflection.getClassNamesFromPackage(prefix);
@@ -73,7 +73,7 @@ public class Dependency {
             if (singlentons.containsKey(name)) {
                 throw new DependencyException("Object already injected with name: " + name);
             } else {
-                singlentons.put(name, (Object) injectionObject);
+                singlentons.put(name, injectionObject);
             }
 
         } finally {

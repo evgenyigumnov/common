@@ -51,12 +51,12 @@ public class ORMTest {
             obj.setName("aaa");
             obj.setSalary(111);
             obj = (ObjectDTO) tx.insert(obj);
-            ObjectDTO object1 = (ObjectDTO) tx.findOne(ObjectDTO.class, new Long(1));
+            ObjectDTO object1 = (ObjectDTO) tx.findOne(ObjectDTO.class, 1L);
             assertEquals(object1.getName(), "aaa");
             obj.setName("ccc");
             obj.setSalary(333);
             obj = (ObjectDTO) tx.update(obj);
-            ObjectDTO object2 = (ObjectDTO) tx.findOne(ObjectDTO.class, new Long(1));
+            ObjectDTO object2 = (ObjectDTO) tx.findOne(ObjectDTO.class, 1L);
             assertEquals(object2.getName(), "ccc");
         } finally {
             if (tx != null) {
@@ -67,17 +67,15 @@ public class ORMTest {
 
         try {
             tx = ORM.beginTransaction();
-            ArrayList<Object> objectsFind = tx.findBy("id > ?", ObjectDTO.class, new Long(0));
+            ArrayList<Object> objectsFind = tx.findBy("id > ?", ObjectDTO.class, 0L);
             assertEquals(objectsFind.size(), 1);
-            int affectedRecords = tx.deleteBy("id > ?", ObjectDTO.class, new Long(0));
+            int affectedRecords = tx.deleteBy("id > ?", ObjectDTO.class, 0L);
             assertEquals(affectedRecords,1);
-            ArrayList<Object> objectsFind2 = tx.findBy("id > ?", ObjectDTO.class, new Long(0));
+            ArrayList<Object> objectsFind2 = tx.findBy("id > ?", ObjectDTO.class, 0L);
             assertEquals(objectsFind2.size(), 0);
 
         } finally {
-            if (tx != null) {
-                tx.commit(); 
-            }
+            tx.commit();
         }
 
 
@@ -91,13 +89,11 @@ public class ORMTest {
             assertEquals(objectsFind.size(), 1);
             int affectedRecords = tx.delete(o);
             assertEquals(affectedRecords,1);
-            ArrayList<Object> objectsFind2 = tx.findBy("id > ?", ObjectDTO.class, new Long(0));
+            ArrayList<Object> objectsFind2 = tx.findBy("id > ?", ObjectDTO.class, 0L);
             assertEquals(objectsFind2.size(), 0);
 
         } finally {
-            if (tx != null) {
-                tx.commit(); 
-            }
+            tx.commit();
         }
 
 
@@ -112,9 +108,7 @@ public class ORMTest {
 
 
         } finally {
-            if (tx != null) {
-                tx.rollback();
-            }
+            tx.rollback();
         }
 
         try {
@@ -124,9 +118,7 @@ public class ORMTest {
 
 
         } finally {
-            if (tx != null) {
-                tx.commit();
-            }
+            tx.commit();
         }
 
         // Autocommit mode
@@ -135,12 +127,12 @@ public class ORMTest {
         test1.setName("a");
         test1.setSalary(1);
         test1 = (ObjectDTO )ORM.insert(test1);
-        ObjectDTO test2 = (ObjectDTO)ORM.findOne(ObjectDTO.class, new Long(test1.getId()));
+        ObjectDTO test2 = (ObjectDTO)ORM.findOne(ObjectDTO.class, test1.getId());
         assertEquals(test1.getId(), test2.getId());
         assertEquals(test2.getName(), "a");
         test1.setName("b");
         ORM.update(test1);
-        test2 = (ObjectDTO)ORM.findOne(ObjectDTO.class, new Long(test1.getId()));
+        test2 = (ObjectDTO)ORM.findOne(ObjectDTO.class, test1.getId());
         assertEquals(test2.getName(), "b");
 
 

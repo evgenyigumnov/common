@@ -39,7 +39,7 @@ public class ControllerHandler extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        HashMap<String, Object> model = new HashMap<String, Object>();
+        HashMap<String, Object> model = new HashMap<>();
         String templateName = null;
         int status = HttpServletResponse.SC_OK;
 

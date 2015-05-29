@@ -1,12 +1,12 @@
 package com.igumnov.common;
 
-import static org.junit.Assert.*;
-
 import com.igumnov.common.time.TimeException;
-import org.junit.Test;
-
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 
 public class TaskTest {
@@ -16,9 +16,7 @@ public class TaskTest {
 
         Benchmark.timerBegin("TaskStart");
         Benchmark.timerBegin("TaskProgress");
-        Future<?> task = Task.startProcedure(() -> {
-            Time.sleepInSeconds(2);
-        });
+        Future<?> task = Task.startProcedure(() -> Time.sleepInSeconds(2));
         assertTrue(Benchmark.timerStop("TaskStart") < 0.5 * 1000);
         task.get();
         assertTrue(Benchmark.timerStop("TaskProgress") > 1 * 1000);

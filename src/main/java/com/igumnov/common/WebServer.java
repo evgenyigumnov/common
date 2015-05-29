@@ -43,7 +43,7 @@ public class WebServer {
 
 
     private static Server server;
-    private static ArrayList<ContextHandler> handlers = new ArrayList<ContextHandler>();
+    private static ArrayList<ContextHandler> handlers = new ArrayList<>();
     private static String templateFolder;
     private static ServerConnector connector;
     private static ServerConnector https;
@@ -182,7 +182,7 @@ public class WebServer {
     public static void addRestrictRule(String path, String[] roles) {
         Constraint constraint = new Constraint();
         constraint.setName(Constraint.__FORM_AUTH);
-        ;
+
         constraint.setRoles(roles);
         constraint.setAuthenticate(true);
 
@@ -196,7 +196,7 @@ public class WebServer {
     public static void addAllowRule(String path) {
         Constraint constraint = new Constraint();
         constraint.setName(Constraint.__FORM_AUTH);
-        ;
+
         constraint.setAuthenticate(false);
 
         ConstraintMapping constraintMapping = new ConstraintMapping();

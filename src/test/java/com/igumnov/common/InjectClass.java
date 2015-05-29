@@ -12,10 +12,10 @@ public class InjectClass {
 
     private String retVal = "1";
 
-    private static InjectClass singlenton;
+    private static InjectClass singleton;
 
     InjectClass() {
-        singlenton = this;
+        singleton = this;
     }
 
 
@@ -27,7 +27,7 @@ public class InjectClass {
 
 
     public static String  test() {
-        return singlenton.injectTest.ret();
+        return singleton.injectTest.ret();
     }
 
 }

@@ -1,14 +1,13 @@
 package com.igumnov.common;
 
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.igumnov.common.webserver.WebServerException;
+import java.util.HashMap;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 public class WebServerTest {
 
@@ -36,28 +35,23 @@ public class WebServerTest {
         WebServer.addStaticContentHandler("/static", "tmp");
         File.writeString("123", "tmp/webserver.txt");
 
-        WebServer.addHandler("/script", (request) -> {
-            return "Bla-Bla";
-        });
+        WebServer.addHandler("/script", request -> "Bla-Bla");
 
-        WebServer.addHandler("/new", (request) -> {
-            return "new new";
-        });
+        WebServer.addHandler("/new", request -> "new new");
 
         WebServer.addAllowRule("/*");
         WebServer.addRestrictRule("/new", new String[]{"user"});
 
-        WebServer.addHandler("/login", (request) -> {
-            return "<form method='POST' action='/j_security_check'>"
-                    + "<input type='text' name='j_username'/>"
-                    + "<input type='password' name='j_password'/>"
-                    + "<input type='submit' value='Login'/></form>";
-        });
+        WebServer.addHandler("/login", request -> "<form method='POST' action='/j_security_check'>"
+                + "<input type='text' name='j_username'/>"
+                + "<input type='password' name='j_password'/>"
+                + "<input type='submit' value='Login'/></form>"
+        );
 
-        WebServer.addRestController("/get", (request) -> {
+        WebServer.addRestController("/get", request -> {
 
             if (request.getMethod().equals(WebServer.METHOD_GET)) {
-                HashMap<String, String> ret = new HashMap<String, String>();
+                HashMap<String, String> ret = new HashMap<>();
                 ret.put("key1", "val1");
                 ret.put("key2", "val2");
                 return ret;

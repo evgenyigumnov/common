@@ -6,6 +6,6 @@ import java.util.Map;
 
 public interface ControllerInterface {
 
-    public String process(HttpServletRequest request, Map<String, Object> model) throws WebServerException;
+    String process(HttpServletRequest request, Map<String, Object> model) throws WebServerException;
 
 }

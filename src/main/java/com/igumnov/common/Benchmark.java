@@ -10,7 +10,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 public class Benchmark {
 
     private static ReentrantReadWriteLock timersLock = new ReentrantReadWriteLock();
-    private static HashMap<String, Timer> timers = new HashMap<String, Timer>();
+    private static HashMap<String, Timer> timers = new HashMap<>();
     protected static final String timerDefaultName = "com.igumnov.common.timer";
 
     public static void timerStart(String name) throws TimeException {

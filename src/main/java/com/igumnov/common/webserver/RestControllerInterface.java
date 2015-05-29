@@ -4,5 +4,5 @@ import javax.servlet.http.HttpServletRequest;
 
 public interface RestControllerInterface {
 
-    public Object response(HttpServletRequest request, Object postObject) throws WebServerException;
+    Object response(HttpServletRequest request, Object postObject) throws WebServerException;
 }
