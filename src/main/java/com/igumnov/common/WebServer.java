@@ -5,9 +5,7 @@ import com.igumnov.common.reflection.ReflectionException;
 import com.igumnov.common.webserver.*;
 import nz.net.ultraq.thymeleaf.LayoutDialect;
 import org.eclipse.jetty.http.HttpVersion;
-import org.eclipse.jetty.security.ConstraintMapping;
-import org.eclipse.jetty.security.ConstraintSecurityHandler;
-import org.eclipse.jetty.security.HashLoginService;
+import org.eclipse.jetty.security.*;
 import org.eclipse.jetty.security.authentication.FormAuthenticator;
 import org.eclipse.jetty.server.*;
 import org.eclipse.jetty.server.handler.ContextHandler;
@@ -23,7 +21,6 @@ import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.eclipse.jetty.util.thread.QueuedThreadPool;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
-import org.eclipse.jetty.util.security.Password;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -52,7 +49,7 @@ public class WebServer {
     private static ServerConnector https;
     private static ConstraintSecurityHandler securityHandler;
     private static ServletContextHandler servletContext;
-    private static HashLoginService loginService = new HashLoginService();
+    private static LoginService loginService = new HashLoginService();
     private static QueuedThreadPool threadPool = null;
 
     private WebServer() {
@@ -227,6 +224,10 @@ public class WebServer {
         securityHandler.addConstraintMapping(constraintMapping);
     }
 
+    public static void setLoginService(LoginServiceInterface loginServiceInterface) {
+        loginService = new LoginServiceHandler(loginServiceInterface);
+    }
+
     public static void security(String loginPage, String loginErrorPage, String logoutUrl) {
 
 
@@ -267,10 +268,13 @@ public class WebServer {
 
 
     public static void addUserWithEncryptedPassword(String username, String password, String[] groups) throws ReflectionException, IllegalAccessException {
-        loginService.putUser(username, Credential.Crypt.getCredential(password), groups);
+        ((HashLoginService)loginService).putUser(username, Credential.Crypt.getCredential(password), groups);
     }
 
     public static void addUser(String username, String password, String[] groups) {
-        loginService.putUser(username, Credential.Crypt.getCredential(Credential.Crypt.crypt(username, password)), groups);
+        ((HashLoginService)loginService).putUser(username, Credential.Crypt.getCredential(Credential.Crypt.crypt(username, password)), groups);
     }
+
+
+
 }

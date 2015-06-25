@@ -41,7 +41,7 @@ Maven:
     <dependency>
       <groupId>com.igumnov</groupId>
       <artifactId>common</artifactId>
-      <version>6.0</version>
+      <version>6.1</version>
     </dependency>
 
 
@@ -70,10 +70,10 @@ Embedded WebServer
     WebServer.init("localhost", 8080); // Init HTTP
     WebServer.https(8443, "src/test/resources/key.jks", "storepwd", "keypwd"); // Init HTTPS
 
-Security
+Security in memory
 
     WebServer.security("/loginPage", "/loginPageError", "/logoutLink");
-    WebServer.addUser("username", "password", new String[]{"user_role","admin_role"});
+    WebServer.addUser("username", "password", new String[]{"user_role","admin_role"}); // Add users in memory
     WebServer.addAllowRule("/*");
     WebServer.addRestrictRule("/script", new String[]{"user"});
     WebServer.addHandler("/loginPage", (request, response) -> {
@@ -82,6 +82,17 @@ Security
         + "<input type='password' name='j_password'/>"
         + "<input type='submit' value='Login'/></form>";
     });
+
+Security user list from custom source
+
+    WebServer.setLoginService((userName) -> {
+        if(userName.equals("admin1")) {
+            return new WebUser("admin1", "CRYPT:adpexzg3FUZAk", new String[]{"user"});
+        }
+        return null;
+    });
+
+
 
 CGI/Static
 
