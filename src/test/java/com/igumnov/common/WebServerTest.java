@@ -90,7 +90,8 @@ public class WebServerTest {
             return "example";
         });
 
-        WebServer.start();
+        //WebServer.addJDBCSessionManager("org.h2.Driver", "jdbc:h2:mem:test?user=SA&password=",60,"test");
+                WebServer.start();
         assertEquals("123", URL.getAllToString("http://localhost:8181/static/webserver.txt"));
         assertEquals("Bla-Bla", URL.getAllToString("http://localhost:8181/script"));
         assertEquals("{\"key1\":\"val1\",\"key2\":\"val2\"}", URL.getAllToString("http://localhost:8181/get"));

@@ -11,6 +11,9 @@ import org.eclipse.jetty.server.*;
 import org.eclipse.jetty.server.handler.ContextHandler;
 import org.eclipse.jetty.server.handler.ContextHandlerCollection;
 import org.eclipse.jetty.server.handler.ResourceHandler;
+import org.eclipse.jetty.server.session.JDBCSessionIdManager;
+import org.eclipse.jetty.server.session.JDBCSessionManager;
+import org.eclipse.jetty.server.session.SessionHandler;
 import org.eclipse.jetty.servlet.DefaultServlet;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
@@ -279,5 +282,26 @@ public class WebServer {
         return server;
     }
 
+    public static void addJDBCSessionManager(String jdbcDriver, String jdbcUrl, int scavengeInterval, String workerName) {
+
+        // Specify the Session ID Manager
+        JDBCSessionIdManager jdbcSessionIdManager = new JDBCSessionIdManager(server);
+        jdbcSessionIdManager.setWorkerName(workerName);
+        jdbcSessionIdManager.setDriverInfo(jdbcDriver,jdbcUrl);
+        jdbcSessionIdManager.setScavengeInterval(scavengeInterval);
+        server.setSessionIdManager(jdbcSessionIdManager);
+
+        // Sessions are bound to a context.
+        ContextHandler contextHandler = new ContextHandler("/");
+        server.setHandler(contextHandler);
+
+        // Create the SessionHandler (wrapper) to handle the sessions
+        JDBCSessionManager jdbcSessionManager = new JDBCSessionManager();
+        jdbcSessionManager.setSessionIdManager(server.getSessionIdManager());
+        SessionHandler sessionHandler = new SessionHandler(jdbcSessionManager);
+        contextHandler.setHandler(sessionHandler);
+
+        handlers.add(contextHandler);
+    }
 
 }
