@@ -11,6 +11,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
 
 public class WebServerTest {
 
@@ -91,9 +92,22 @@ public class WebServerTest {
         });
 
         //WebServer.addJDBCSessionManager("org.h2.Driver", "jdbc:h2:mem:test?user=SA&password=",60,"test");
-                WebServer.start();
+        WebServer.start();
         assertEquals("123", URL.getAllToString("http://localhost:8181/static/webserver.txt"));
         assertEquals("Bla-Bla", URL.getAllToString("http://localhost:8181/script"));
+
+
+        try {
+            URL.getAllToString("https://localhost:8282/script");
+            assertTrue(false);
+        } catch (Exception e) {
+            assertTrue(true);
+        }
+        //Time.sleepInSeconds(1000000);
+        URL.turnOffCertificateValidation();
+        assertEquals("Bla-Bla", URL.getAllToString("https://localhost:8282/script"));
+
+
         assertEquals("{\"key1\":\"val1\",\"key2\":\"val2\"}", URL.getAllToString("http://localhost:8181/get"));
         ObjectDTO o = new ObjectDTO();
         o.setName("a");

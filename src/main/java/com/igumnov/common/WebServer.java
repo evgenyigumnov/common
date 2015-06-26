@@ -100,8 +100,10 @@ public class WebServer {
 
     public static void start() throws Exception {
         if (https == null) {
+            Log.debug("https not enabled");
             server.setConnectors(new Connector[]{connector});
         } else {
+            Log.debug("https enabled");
             server.setConnectors(new Connector[]{connector, https});
         }
         ContextHandlerCollection contexts = new ContextHandlerCollection();
