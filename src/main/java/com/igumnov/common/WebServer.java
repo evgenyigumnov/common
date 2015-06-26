@@ -275,6 +275,9 @@ public class WebServer {
         ((HashLoginService)loginService).putUser(username, Credential.Crypt.getCredential(Credential.Crypt.crypt(username, password)), groups);
     }
 
+    public static Server getServerJettyObject() {
+        return server;
+    }
 
 
 }
