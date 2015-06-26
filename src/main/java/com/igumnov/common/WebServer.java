@@ -36,6 +36,7 @@ import java.util.ArrayList;
 public class WebServer {
 
 
+    private static SessionHandler sessionHandler;
     private static TemplateEngine templateEngine;
 
 
@@ -244,7 +245,9 @@ public class WebServer {
 
         servletContext = new ServletContextHandler(ServletContextHandler.SESSIONS | ServletContextHandler.SECURITY);
         servletContext.setSecurityHandler(securityHandler);
-
+        if(sessionHandler!=null) {
+            servletContext.setSessionHandler(sessionHandler);
+        }
 
         servletContext.addServlet(new ServletHolder(new DefaultServlet() {
             @Override
@@ -292,16 +295,16 @@ public class WebServer {
         server.setSessionIdManager(jdbcSessionIdManager);
 
         // Sessions are bound to a context.
-        ContextHandler contextHandler = new ContextHandler("/");
-        server.setHandler(contextHandler);
+        //ContextHandler contextHandler = new ContextHandler("/");
+        //server.setHandler(contextHandler);
 
         // Create the SessionHandler (wrapper) to handle the sessions
         JDBCSessionManager jdbcSessionManager = new JDBCSessionManager();
         jdbcSessionManager.setSessionIdManager(server.getSessionIdManager());
-        SessionHandler sessionHandler = new SessionHandler(jdbcSessionManager);
-        contextHandler.setHandler(sessionHandler);
+        sessionHandler = new SessionHandler(jdbcSessionManager);
+        ///contextHandler.setHandler(sessionHandler);
 
-        handlers.add(contextHandler);
+        //handlers.add(contextHandler);
     }
 
 }
