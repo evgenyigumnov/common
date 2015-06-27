@@ -32,7 +32,7 @@ public class WebServerTest {
 
         WebServer.setPoolSize(10,40);
         WebServer.init("localhost", 8181);
-        WebServer.https(8282, "src/test/resources/key.jks", "storepwd", "keypwd");
+        WebServer.https("localhost",8282, "src/test/resources/key.jks", "storepwd", "keypwd");
         WebServer.setLoginService((userName) -> {
             if(userName.equals("admin1")) {
                 return new WebUser("admin1", "CRYPT:adpexzg3FUZAk", new String[]{"user"});

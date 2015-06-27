@@ -81,7 +81,7 @@ public class WebServer {
 
     }
 
-    public static void https(int port, String keystoreFile, String storePassword, String managerPassword) {
+    public static void https(String hostName,int port, String keystoreFile, String storePassword, String managerPassword) {
         if(server == null) {
             if (threadPool != null) {
                 server = new Server(threadPool);
@@ -106,6 +106,7 @@ public class WebServer {
                 new SslConnectionFactory(sslContextFactory, HttpVersion.HTTP_1_1.asString()),
                 new HttpConnectionFactory(https_config));
         https.setPort(port);
+        https.setHost(hostName);
     }
 
     public static void start() throws Exception {
@@ -114,7 +115,13 @@ public class WebServer {
             server.setConnectors(new Connector[]{connector});
         } else {
             Log.debug("https enabled");
-            server.setConnectors(new Connector[]{connector, https});
+            if(connector == null) {
+                server.setConnectors(new Connector[]{https});
+            }
+            else {
+                server.setConnectors(new Connector[]{connector, https});
+
+            }
         }
         ContextHandlerCollection contexts = new ContextHandlerCollection();
         Handler list[] = new Handler[handlers.size()];
