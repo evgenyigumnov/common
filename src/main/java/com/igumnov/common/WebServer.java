@@ -66,10 +66,12 @@ public class WebServer {
 
     public static void init(String hostName, int port) {
 
-        if (threadPool != null) {
-            server = new Server(threadPool);
-        } else {
-            server = new Server();
+        if(server == null) {
+            if (threadPool != null) {
+                server = new Server(threadPool);
+            } else {
+                server = new Server();
+            }
         }
 
         connector = new ServerConnector(server);
@@ -80,6 +82,14 @@ public class WebServer {
     }
 
     public static void https(int port, String keystoreFile, String storePassword, String managerPassword) {
+        if(server == null) {
+            if (threadPool != null) {
+                server = new Server(threadPool);
+            } else {
+                server = new Server();
+            }
+        }
+
         HttpConfiguration http_config = new HttpConfiguration();
         http_config.setSecureScheme("https");
         http_config.setSecurePort(port);
