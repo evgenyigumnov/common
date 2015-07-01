@@ -266,18 +266,45 @@ public class Transaction {
                 if (annotation.annotationType().equals(Id.class)) {
                     pkName = field.getName();
                     if(field.getType().getName().equals("java.lang.Long") && primaryKey instanceof String) {
-                        return findBy(pkName + "=?",className, Long.valueOf((String)primaryKey)).get(0);
+                        ArrayList<Object> ret = findBy(pkName + "=?", className, Long.valueOf((String) primaryKey));
+                        if(ret.size()>0) {
+                            return ret.get(0);
+                        } else {
+                            return null;
+                        }
                     }
                     if(field.getType().getName().equals("java.lang.Double") && primaryKey instanceof String) {
-                        return findBy(pkName + "=?", className, Double.valueOf((String) primaryKey)).get(0);
+                        ArrayList<Object> ret = findBy(pkName + "=?", className, Double.valueOf((String) primaryKey));
+                        if(ret.size()>0) {
+                            return ret.get(0);
+                        } else {
+                            return null;
+                        }
                     }
                     if(field.getType().getName().equals("java.lang.Float") && primaryKey instanceof String) {
-                        return findBy(pkName + "=?",className, Float.valueOf((String)primaryKey)).get(0);
+                        ArrayList<Object> ret = findBy(pkName + "=?",className, Float.valueOf((String)primaryKey));
+                        if(ret.size()>0) {
+                            return ret.get(0);
+                        } else {
+                            return null;
+                        }
                     }
                     if(field.getType().getName().equals("java.lang.Integer") && primaryKey instanceof String) {
-                        return findBy(pkName + "=?",className, Integer.valueOf((String)primaryKey)).get(0);
+                        ArrayList<Object> ret = findBy(pkName + "=?",className, Integer.valueOf((String)primaryKey));
+                        if(ret.size()>0) {
+                            return ret.get(0);
+                        } else {
+                            return null;
+                        }
                     }
-                    return findBy(pkName + "=?",className, primaryKey).get(0);
+
+
+                    ArrayList<Object> ret = findBy(pkName + "=?", className, primaryKey);
+                    if(ret.size()>0) {
+                        return ret.get(0);
+                    } else {
+                        return null;
+                    }
 
                 }
         }
