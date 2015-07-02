@@ -41,7 +41,7 @@ Maven:
     <dependency>
       <groupId>com.igumnov</groupId>
       <artifactId>common</artifactId>
-      <version>7.1</version>
+      <version>8.0</version>
     </dependency>
 
 
@@ -63,6 +63,10 @@ Memory Cache (Key-Value and tags)
     Cache.removeByTag("tag1");
     Object valueObject = Cache.get("keyStr");
 
+
+Cache with Redis
+
+    Cache.initWithRedis(defaultTTLInSeconds, redisHost, redisPort);
 
 Embedded WebServer
 
@@ -405,3 +409,11 @@ If you do not want use ORM
                 </exclusion>
       </exclusions>
 
+If you dont want use Redis client for cache
+
+      <exclusions>
+                <exclusion>
+            	    <groupId>redis.clients</groupId>
+        	        <artifactId>jedis</artifactId>
+        	    </exclusion>
+      </dependency>

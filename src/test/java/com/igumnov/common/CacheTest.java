@@ -13,7 +13,9 @@ public class CacheTest {
     @Test
     public void testCache() throws ExecutionException, InterruptedException {
 
-        Cache.init(7, 24.0 * 60 * 60);
+        //Cache.init(7, 24.0 * 60 * 60);
+
+        //Cache.initWithRedis(24.0 * 60 * 60, "localhost", 6379);
 
         Object value = Cache.put("a1", "va11", 1.1, "tag1", "tag2");
         Cache.put("a2", "va12", 1.1, "tag1");
