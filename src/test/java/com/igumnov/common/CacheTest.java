@@ -13,7 +13,7 @@ public class CacheTest {
     @Test
     public void testCache() throws ExecutionException, InterruptedException {
 
-        //Cache.init(7, 24.0 * 60 * 60);
+        Cache.init(7, 24.0 * 60 * 60);
 
         //Cache.initWithRedis(24.0 * 60 * 60, "localhost", 6379);
 
