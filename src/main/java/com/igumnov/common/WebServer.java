@@ -40,6 +40,7 @@ public class WebServer {
     private static SessionHandler sessionHandler;
     private static HashMap<String, TemplateEngine> templateEngines = new HashMap<>();
     private static LocaleInterceptorInterface localeInterceptor;
+    private static HashMap<String, MessageResolver> resolvers = new HashMap<>();
 
     public static final String METHOD_GET = "GET";
     public static final String METHOD_POST = "POST";
@@ -60,6 +61,7 @@ public class WebServer {
     private WebServer() {
 
     }
+
 
     public static void setPoolSize(int min, int max) {
         threadPool = new QueuedThreadPool(max, min);
@@ -222,7 +224,9 @@ public class WebServer {
             templateEngine.setTemplateResolver(templateResolver);
             String localeFile = langs.get(lang);
             if (localeFile != null) {
-                templateEngine.addMessageResolver(new MessageResolver(localeFile));
+                MessageResolver resolver = new MessageResolver(localeFile);
+                templateEngine.addMessageResolver(resolver);
+                resolvers.put(lang, resolver);
             }
             templateEngine.addDialect(new LayoutDialect());
             templateEngines.put(lang, templateEngine);
@@ -341,5 +345,9 @@ public class WebServer {
         //handlers.add(contextHandler);
     }
 
+    public static String getMessage(HttpServletRequest request, HttpServletResponse response, String messageKey, Object[] messageParameters) throws WebServerException {
+        MessageResolver resolver = resolvers.get(localeInterceptor.locale(request, response));
+        return resolver.resolveMessage(null, messageKey, messageParameters).getResolvedMessage();
+    }
 
 }
