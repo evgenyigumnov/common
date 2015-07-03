@@ -32,13 +32,14 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class WebServer {
 
 
     private static SessionHandler sessionHandler;
-    private static TemplateEngine templateEngine;
-
+    private static HashMap<String, TemplateEngine> templateEngines = new HashMap<>();
+    private static LocaleInterceptorInterface localeInterceptor;
 
     public static final String METHOD_GET = "GET";
     public static final String METHOD_POST = "POST";
@@ -66,7 +67,7 @@ public class WebServer {
 
     public static void init(String hostName, int port) {
 
-        if(server == null) {
+        if (server == null) {
             if (threadPool != null) {
                 server = new Server(threadPool);
             } else {
@@ -81,8 +82,8 @@ public class WebServer {
 
     }
 
-    public static void https(String hostName,int port, String keystoreFile, String storePassword, String managerPassword) {
-        if(server == null) {
+    public static void https(String hostName, int port, String keystoreFile, String storePassword, String managerPassword) {
+        if (server == null) {
             if (threadPool != null) {
                 server = new Server(threadPool);
             } else {
@@ -115,10 +116,9 @@ public class WebServer {
             server.setConnectors(new Connector[]{connector});
         } else {
             Log.debug("https enabled");
-            if(connector == null) {
+            if (connector == null) {
                 server.setConnectors(new Connector[]{https});
-            }
-            else {
+            } else {
                 server.setConnectors(new Connector[]{connector, https});
 
             }
@@ -198,25 +198,41 @@ public class WebServer {
 
 
     public static void addTemplates(String folder, long cacheTTL, String localeFile) throws IOException {
+
+        HashMap<String, String> langs = new HashMap<>();
+        langs.put("en", localeFile);
+        addTemplates(folder, cacheTTL, langs, (request, response) -> {
+            return "en";
+        });
+    }
+
+
+    public static void addTemplates(String folder, long cacheTTL, HashMap<String, String> langs, LocaleInterceptorInterface interceptor) throws IOException {
         templateFolder = folder;
-        ServletContextTemplateResolver templateResolver =
-                new ServletContextTemplateResolver();
-        templateResolver.setTemplateMode("LEGACYHTML5");
-        templateResolver.setPrefix("/");
-        templateResolver.setSuffix(".html");
-        templateResolver.setCacheTTLMs(cacheTTL);
-        templateEngine = new TemplateEngine();
-        templateEngine.setTemplateResolver(templateResolver);
-        if(localeFile != null) {
-            templateEngine.addMessageResolver(new MessageResolver(localeFile));
+        localeInterceptor = interceptor;
+
+        for (String lang : langs.keySet()) {
+            ServletContextTemplateResolver templateResolver = new ServletContextTemplateResolver();
+            templateResolver.setTemplateMode("LEGACYHTML5");
+            templateResolver.setPrefix("/");
+            templateResolver.setSuffix(".html");
+            templateResolver.setCacheTTLMs(cacheTTL);
+            templateResolver.setCharacterEncoding("UTF-8");
+            TemplateEngine templateEngine = new TemplateEngine();
+            templateEngine.setTemplateResolver(templateResolver);
+            String localeFile = langs.get(lang);
+            if (localeFile != null) {
+                templateEngine.addMessageResolver(new MessageResolver(localeFile));
+            }
+            templateEngine.addDialect(new LayoutDialect());
+            templateEngines.put(lang, templateEngine);
         }
-        templateEngine.addDialect(new LayoutDialect());
 
     }
 
     public static void addController(String name, ControllerInterface i) {
 
-        addServlet(new ControllerHandler(templateEngine, i), name);
+        addServlet(new ControllerHandler(templateEngines, localeInterceptor, i), name);
 
     }
 
@@ -264,7 +280,7 @@ public class WebServer {
 
         servletContext = new ServletContextHandler(ServletContextHandler.SESSIONS | ServletContextHandler.SECURITY);
         servletContext.setSecurityHandler(securityHandler);
-        if(sessionHandler!=null) {
+        if (sessionHandler != null) {
             servletContext.setSessionHandler(sessionHandler);
         }
 
@@ -291,13 +307,12 @@ public class WebServer {
     }
 
 
-
     public static void addUserWithEncryptedPassword(String username, String password, String[] groups) throws ReflectionException, IllegalAccessException {
-        ((HashLoginService)loginService).putUser(username, Credential.Crypt.getCredential(password), groups);
+        ((HashLoginService) loginService).putUser(username, Credential.Crypt.getCredential(password), groups);
     }
 
     public static void addUser(String username, String password, String[] groups) {
-        ((HashLoginService)loginService).putUser(username, Credential.Crypt.getCredential(Credential.Crypt.crypt(username, password)), groups);
+        ((HashLoginService) loginService).putUser(username, Credential.Crypt.getCredential(Credential.Crypt.crypt(username, password)), groups);
     }
 
     public static Server getServerJettyObject() {
@@ -309,7 +324,7 @@ public class WebServer {
         // Specify the Session ID Manager
         JDBCSessionIdManager jdbcSessionIdManager = new JDBCSessionIdManager(server);
         jdbcSessionIdManager.setWorkerName(workerName);
-        jdbcSessionIdManager.setDriverInfo(jdbcDriver,jdbcUrl);
+        jdbcSessionIdManager.setDriverInfo(jdbcDriver, jdbcUrl);
         jdbcSessionIdManager.setScavengeInterval(scavengeInterval);
         server.setSessionIdManager(jdbcSessionIdManager);
 
@@ -325,5 +340,6 @@ public class WebServer {
 
         //handlers.add(contextHandler);
     }
+
 
 }

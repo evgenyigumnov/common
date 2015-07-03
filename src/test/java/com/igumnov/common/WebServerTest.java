@@ -2,6 +2,9 @@ package com.igumnov.common;
 
 
 import com.igumnov.common.webserver.WebServerException;
+
+import java.lang.reflect.Field;
+import java.nio.charset.Charset;
 import java.util.HashMap;
 
 import com.igumnov.common.webserver.WebUser;
@@ -82,9 +85,20 @@ public class WebServerTest {
 
         });
 
-        File.writeString("hello.world=Hello world", "tmp/locale.properties");
+        File.writeString("hello.world=Hello world", "tmp/locale_en.properties");
+        File.writeString("hello.world=Привет мир", "tmp/locale_ru.properties");
 
-        WebServer.addTemplates("tmp", 0, "tmp/locale.properties");
+//        WebServer.addTemplates("tmp", 0, "tmp/locale_en.properties");
+        HashMap<String,String> langs = new HashMap<>();
+        langs.put("en","tmp/locale_en.properties");
+        langs.put("ru","tmp/locale_ru.properties");
+        WebServer.addTemplates("tmp", 0, langs,
+                (request, response) -> {
+                    if (request.getParameter("lang") != null) {
+                        return request.getParameter("lang");
+                    }
+                    return "en";
+                });
         File.writeString("<html><body><span th:text=\"${varName}\"></span><span th:text=\"#{hello.world}\"></span></body><html>", "tmp/example.html");
         WebServer.addController("/index", (request, response, model) -> {
             model.put("varName", new Integer("123"));
@@ -115,6 +129,8 @@ public class WebServerTest {
         assertEquals(JSON.toString(o), URL.getAllToString("http://localhost:8181/rest/put", WebServer.METHOD_PUT, null, JSON.toString(o)));
 
         assertEquals("<html><head></head><body><span>123</span><span>Hello world</span></body></html>", URL.getAllToString("http://localhost:8181/index"));
+//        Time.sleepInSeconds(1111111);
+        assertEquals("<html><head></head><body><span>123</span><span>Привет мир</span></body></html>", URL.getAllToString("http://localhost:8181/index?lang=ru"));
         assertNotEquals("new new", URL.getAllToString("http://localhost:8181/new"));
 
 //        Time.sleepInSeconds(1111111);

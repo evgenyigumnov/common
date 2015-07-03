@@ -3,6 +3,8 @@ package com.igumnov.common.webserver;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.text.MessageFormat;
 import java.util.Properties;
 
@@ -20,7 +22,8 @@ public class MessageResolver implements IMessageResolver {
 
         properties = new Properties();
         FileInputStream input = new FileInputStream(fileName);
-        properties.load(input);
+        InputStreamReader isr = new InputStreamReader(input, Charset.forName("UTF-8"));
+        properties.load(isr);
     }
 
 

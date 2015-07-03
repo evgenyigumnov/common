@@ -13,11 +13,13 @@ import java.util.HashMap;
 
 public class ControllerHandler extends HttpServlet {
 
-    private TemplateEngine templateEngine;
+    private HashMap<String,TemplateEngine> templateEngines;
     private ControllerInterface controller;
+    private LocaleInterceptorInterface localeInterceptor;
 
-    public ControllerHandler(TemplateEngine t, ControllerInterface c) {
-        templateEngine = t;
+    public ControllerHandler(HashMap<String,TemplateEngine> engines, LocaleInterceptorInterface interceptor , ControllerInterface c) {
+        templateEngines = engines;
+        localeInterceptor = interceptor;
         controller = c;
     }
 
@@ -47,7 +49,7 @@ public class ControllerHandler extends HttpServlet {
         HashMap<String, Object> model = new HashMap<>();
         String templateName = null;
         int status = HttpServletResponse.SC_OK;
-
+        String lang=null;
         try {
             templateName = controller.process(request, response,  model);
 
@@ -56,15 +58,22 @@ public class ControllerHandler extends HttpServlet {
                 return;
             }
 
+            lang = localeInterceptor.locale(request,response);
+
+
         } catch (WebServerException e) {
 
             status = HttpServletResponse.SC_BAD_REQUEST;
         }
 
         IContext context = new ControllerContext(model, request.getServletContext());
+
+
+        TemplateEngine templateEngine = templateEngines.get(lang);
         String ret = templateEngine.process(templateName, context);
 
         response.setContentType("text/html; charset=utf-8");
+        response.setCharacterEncoding("UTF-8");
         response.setStatus(status);
 
         PrintWriter out = response.getWriter();
