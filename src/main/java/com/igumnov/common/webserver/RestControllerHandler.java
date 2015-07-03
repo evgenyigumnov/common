@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.util.HashMap;
 
 public class RestControllerHandler extends HttpServlet {
 
@@ -60,7 +61,9 @@ public class RestControllerHandler extends HttpServlet {
                 while ((line = reader.readLine()) != null)
                     jb.append(line);
             } catch (Exception e) {
-                responseObj = e;
+                HashMap<String, String> err = new HashMap<>();
+                err.put("message", e.getMessage());
+                responseObj = err;
                 status = HttpServletResponse.SC_BAD_REQUEST;
             }
             postObject = JSON.parse(jb.toString(), postBody);
@@ -74,7 +77,10 @@ public class RestControllerHandler extends HttpServlet {
 
             }
         } catch (WebServerException e) {
-            responseObj = e;
+            HashMap<String, String> err = new HashMap<>();
+            err.put("message", e.getMessage());
+
+            responseObj = err;
             status = HttpServletResponse.SC_BAD_REQUEST;
 
         }
