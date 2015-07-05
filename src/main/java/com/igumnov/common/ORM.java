@@ -161,7 +161,7 @@ public class ORM {
         return ret;
     }
 
-    public ArrayList<HashMap<String, Object>> selectQuery(String sqlQuery, Object... params) throws SQLException {
+    public static ArrayList<HashMap<String, Object>> selectQuery(String sqlQuery, Object... params) throws SQLException {
         ArrayList<HashMap<String, Object>> ret;
         Transaction tx = ORM.beginTransaction();
         ret = tx.selectQuery(sqlQuery, params);
