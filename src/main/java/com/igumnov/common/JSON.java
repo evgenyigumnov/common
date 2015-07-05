@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import com.fasterxml.jackson.core.type.TypeReference;
+
 
 // TODO add test
 public class JSON {
@@ -20,5 +22,8 @@ public class JSON {
         return mapper.readValue(src, c);
     }
 
+    public static  Object parse(String src, TypeReference typeReference) throws IOException {
+        return mapper.readValue(src, typeReference);
+    }
 
 }

@@ -41,7 +41,7 @@ Maven:
     <dependency>
       <groupId>com.igumnov</groupId>
       <artifactId>common</artifactId>
-      <version>8.3</version>
+      <version>8.4</version>
     </dependency>
 
 
