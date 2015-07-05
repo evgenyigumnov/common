@@ -10,6 +10,7 @@ import org.junit.Test;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import static org.junit.Assert.assertEquals;
 
@@ -51,6 +52,11 @@ public class ORMTest {
             obj.setName("aaa");
             obj.setSalary(111);
             obj = (ObjectDTO) tx.insert(obj);
+
+            ArrayList<HashMap<String, Object>> resultSet = tx.selectQuery("select count(id) as cnt from ObjectDTO");
+            assertEquals(resultSet.size(), 1);
+            assertEquals(resultSet.get(0).get("CNT"), 1L);
+
             ObjectDTO object1 = (ObjectDTO) tx.findOne(ObjectDTO.class, 1L);
             assertEquals(object1.getName(), "aaa");
             obj.setName("ccc");

@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.nio.file.NoSuchFileException;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class ORM {
     private static BasicDataSource ds;
@@ -129,7 +130,7 @@ public class ORM {
 
     public static Object insert(Object obj) throws IllegalAccessException, SQLException, ReflectionException {
         Object ret;
-        Transaction tx  = ORM.beginTransaction();
+        Transaction tx = ORM.beginTransaction();
         ret = tx.insert(obj);
         tx.commit();
         return ret;
@@ -146,7 +147,7 @@ public class ORM {
 
     public static Object findOne(Class className, Object primaryKey) throws SQLException, ReflectionException, InstantiationException, IllegalAccessException, IOException {
         Object ret;
-        Transaction tx  = ORM.beginTransaction();
+        Transaction tx = ORM.beginTransaction();
         ret = tx.findOne(className, primaryKey);
         tx.commit();
         return ret;
@@ -154,15 +155,24 @@ public class ORM {
 
     public static int deleteBy(String where, Class classObject, Object... params) throws SQLException {
         int ret;
-        Transaction tx  = ORM.beginTransaction();
+        Transaction tx = ORM.beginTransaction();
         ret = tx.deleteBy(where, classObject, params);
         tx.commit();
         return ret;
     }
 
+    public ArrayList<HashMap<String, Object>> selectQuery(String sqlQuery, Object... params) throws SQLException {
+        ArrayList<HashMap<String, Object>> ret;
+        Transaction tx = ORM.beginTransaction();
+        ret = tx.selectQuery(sqlQuery, params);
+        tx.commit();
+        return ret;
+    }
+
+
     public static int delete(Object obj) throws IllegalAccessException, SQLException {
         int ret;
-        Transaction tx  = ORM.beginTransaction();
+        Transaction tx = ORM.beginTransaction();
         ret = tx.delete(obj);
         tx.commit();
         return ret;
