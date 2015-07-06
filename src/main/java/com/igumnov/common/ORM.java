@@ -19,8 +19,10 @@ public class ORM {
         ds = new BasicDataSource();
         ds.setDriverClassName(driverClass);
         ds.setUrl(url);
-        ds.setUsername(user);
-        ds.setPassword(password);
+        if(user != null) {
+            ds.setUsername(user);
+            ds.setPassword(password);
+        }
         ds.setInitialSize(minPoolSize);
         ds.setMaxTotal(maxPoolSize);
         Dependency.bind("dataSource", ds);
