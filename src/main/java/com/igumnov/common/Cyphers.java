@@ -37,7 +37,6 @@ public class Cyphers {
     }
 
 
-
     public static String decryptAES(String value, String password) throws NoSuchAlgorithmException, NoSuchProviderException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, UnsupportedEncodingException {
         byte[] encypted = fromHex(value);
         SecretKey key = new SecretKeySpec(safePassword(password).getBytes("UTF-8"), "AES");
@@ -50,6 +49,9 @@ public class Cyphers {
 
     private static String safePassword(String unsafe) {
         String safe = unsafe;
+        if (safe.length() > 110) {
+            safe = safe.substring(0, 110);
+        }
         int nn = safe.length();
         for (int i = nn - 1; i < 15; i++) {
             safe = safe + "*";

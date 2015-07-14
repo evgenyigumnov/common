@@ -42,7 +42,7 @@ Maven:
     <dependency>
       <groupId>com.igumnov</groupId>
       <artifactId>common</artifactId>
-      <version>9.1</version>
+      <version>9.2</version>
     </dependency>
 
 
