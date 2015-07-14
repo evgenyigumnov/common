@@ -42,7 +42,7 @@ Maven:
     <dependency>
       <groupId>com.igumnov</groupId>
       <artifactId>common</artifactId>
-      <version>8.8</version>
+      <version>9.0p verupup</version>
     </dependency>
 
 
