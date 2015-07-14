@@ -20,6 +20,7 @@ Common Java library functions:
 * URL
 * Logging
 * Strings
+* Crypt/Decrypt operations
 * Memory Cache (Key-Value and tags)
 * WebServer (Static Content/CGI/Rest support)
 * MVC Framework with Template Engine
@@ -356,6 +357,12 @@ Strings
         // do something by each char in string
     });
 
+Crypt/Decrypt operations
+
+
+    String cryptedString = Cyphers.encryptAES(srcText, password);
+    String uncryptedString = Cyphers.decryptAES(cryptedString,password);
+    String md5Digest = Cyphers.md5(srcText);
 
 
 If you do not want use WebServer
