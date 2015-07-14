@@ -50,9 +50,6 @@ public class Cyphers {
 
     private static String safePassword(String unsafe) {
         String safe = unsafe;
-        if (safe.length() > 16) {
-            safe = safe.substring(0, 16);
-        }
         int nn = safe.length();
         for (int i = nn - 1; i < 15; i++) {
             safe = safe + "*";
