@@ -49,8 +49,9 @@ public class Cyphers {
 
     private static String safePassword(String unsafe) {
         String safe = unsafe;
-        if (safe.length() > 110) {
-            safe = safe.substring(0, 110);
+        if (safe.length() > 16) {
+            safe = md5(safe) + safe;
+            safe = safe.substring(0, 16);
         }
         int nn = safe.length();
         for (int i = nn - 1; i < 15; i++) {
