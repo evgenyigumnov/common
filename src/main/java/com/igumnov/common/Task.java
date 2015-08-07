@@ -62,4 +62,26 @@ public class Task {
         }, when.getTime(), TimeUnit.MILLISECONDS.convert(1, repeatEvery));
 
     }
+
+    public static void timerMonthly(Runnable procedure, int dayOfMonth, int hourOfDay) {
+        Calendar runDate = Calendar.getInstance();
+        runDate.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+        runDate.set(Calendar.HOUR_OF_DAY, hourOfDay);
+        runDate.set(Calendar.MINUTE, 0);
+        runDate.add(Calendar.MONTH, 1);//set to next month
+
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                try {
+                    procedure.run();
+                } finally {
+                    timerMonthly(procedure, dayOfMonth, hourOfDay);
+                }
+            }
+        }, runDate.getTime());
+    }
+
+
 }
