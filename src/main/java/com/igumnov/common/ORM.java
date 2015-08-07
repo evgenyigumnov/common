@@ -2,11 +2,13 @@ package com.igumnov.common;
 
 import com.igumnov.common.dependency.DependencyException;
 import com.igumnov.common.orm.DDLHistory;
+import com.igumnov.common.orm.Id;
 import com.igumnov.common.orm.Transaction;
 import com.igumnov.common.reflection.ReflectionException;
 import org.apache.commons.dbcp2.BasicDataSource;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.file.NoSuchFileException;
 import java.sql.*;
 import java.util.ArrayList;
@@ -14,7 +16,11 @@ import java.util.HashMap;
 
 public class ORM {
     private static BasicDataSource ds;
+    private static Class idClass = Id.class;
 
+    public static void setIdClass(Class id) {
+        idClass = id;
+    }
     public static void connectionPool(String driverClass, String url, String user, String password, int minPoolSize, int maxPoolSize) throws DependencyException {
         ds = new BasicDataSource();
         ds.setDriverClassName(driverClass);
@@ -29,7 +35,7 @@ public class ORM {
 
     }
 
-    public static void applyDDL(String sqlFolder) throws SQLException, IOException, ReflectionException, IllegalAccessException, InstantiationException {
+    public static void applyDDL(String sqlFolder) throws SQLException, IOException, ReflectionException, IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
         Connection con = null;
         int i = 1;
         ResultSet tables = null;
@@ -115,7 +121,7 @@ public class ORM {
     }
 
     public static Transaction beginTransaction() throws SQLException {
-        return new Transaction(ds.getConnection());
+        return new Transaction(ds.getConnection(), idClass);
     }
 
 
@@ -130,7 +136,7 @@ public class ORM {
     }
 
 
-    public static Object insert(Object obj) throws IllegalAccessException, SQLException, ReflectionException {
+    public static Object insert(Object obj) throws IllegalAccessException, SQLException, ReflectionException, NoSuchMethodException, InvocationTargetException {
         Object ret;
         Transaction tx = ORM.beginTransaction();
         ret = tx.insert(obj);

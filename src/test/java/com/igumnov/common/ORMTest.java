@@ -8,6 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,7 +31,7 @@ public class ORMTest {
     }
 
     @Test
-    public void testORM() throws IOException, SQLException, IllegalAccessException, ReflectionException, InstantiationException, DependencyException {
+    public void testORM() throws IOException, SQLException, IllegalAccessException, ReflectionException, InstantiationException, DependencyException, NoSuchMethodException, InvocationTargetException {
         new java.io.File("tmp/sql_folder").mkdir();
 
         ORM.connectionPool("org.h2.Driver", "jdbc:h2:mem:test", "SA", "", 10, 30);
