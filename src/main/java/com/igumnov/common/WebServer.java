@@ -80,11 +80,10 @@ public class WebServer {
         HttpConfiguration httpConfig = new HttpConfiguration();
         httpConfig.addCustomizer( new org.eclipse.jetty.server.ForwardedRequestCustomizer() );
         HttpConnectionFactory connectionFactory = new HttpConnectionFactory( httpConfig );
-        ServerConnector connector = new ServerConnector(server, connectionFactory);
+        connector = new ServerConnector(server, connectionFactory);
 
         connector.setHost(hostName);
         connector.setPort(port);
-
 
     }
     public static void init(String hostName, int port) {
