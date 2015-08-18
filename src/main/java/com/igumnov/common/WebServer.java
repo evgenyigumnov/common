@@ -67,6 +67,26 @@ public class WebServer {
         threadPool = new QueuedThreadPool(max, min);
     }
 
+
+    public static void initProxyMode(String hostName, int port) {
+        if (server == null) {
+            if (threadPool != null) {
+                server = new Server(threadPool);
+            } else {
+                server = new Server();
+            }
+        }
+
+        HttpConfiguration httpConfig = new HttpConfiguration();
+        httpConfig.addCustomizer( new org.eclipse.jetty.server.ForwardedRequestCustomizer() );
+        HttpConnectionFactory connectionFactory = new HttpConnectionFactory( httpConfig );
+        ServerConnector connector = new ServerConnector(server, connectionFactory);
+
+        connector.setHost(hostName);
+        connector.setPort(port);
+
+
+    }
     public static void init(String hostName, int port) {
 
         if (server == null) {
