@@ -53,7 +53,7 @@ public class RestControllerHandler extends HttpServlet {
         Object postObject = null;
         Object responseObj = null;
         int status = HttpServletResponse.SC_OK;
-        if (request.getMethod().equals("POST") || request.getMethod().equals("PUT") || request.getMethod().equals("DELETE") ) {
+        if (request.getMethod().equals("POST") || request.getMethod().equals("PUT")  ) {
             StringBuilder jb = new StringBuilder();
             String line = null;
             try {
