@@ -55,7 +55,7 @@ public class URL {
         byte[] postDataBytes = postData.toString().getBytes("UTF-8");
         HttpURLConnection conn = (HttpURLConnection) u.openConnection();
         conn.setRequestMethod(method);
-        conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
+        conn.setRequestProperty("Content-Type", "application/json;charset=UTF-8");
         conn.setRequestProperty("Content-Length", String.valueOf(postDataBytes.length));
         conn.setDoOutput(true);
         conn.getOutputStream().write(postDataBytes);
