@@ -1,5 +1,7 @@
 package com.igumnov.common;
 
+import com.igumnov.common.time.TimeException;
+
 import javax.net.ssl.*;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -53,7 +55,15 @@ public class URL {
         }
 
         byte[] postDataBytes = postData.toString().getBytes("UTF-8");
-        HttpURLConnection conn = (HttpURLConnection) u.openConnection();
+        HttpURLConnection conn = null;
+        String timerName = "url" + Number.randomIntByRange(11111111,999999999);
+        try {
+            Benchmark.timerStart(timerName);
+            conn = (HttpURLConnection) u.openConnection();
+            Log.debug("Timing url open connect " + Benchmark.timerStop() + " " + url);
+        } catch (TimeException e) {
+            e.printStackTrace();
+        }
         conn.setRequestMethod(method);
         conn.setRequestProperty("Content-Type", "application/json;charset=UTF-8");
         conn.setRequestProperty("Content-Length", String.valueOf(postDataBytes.length));
