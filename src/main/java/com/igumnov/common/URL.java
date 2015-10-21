@@ -60,7 +60,7 @@ public class URL {
         try {
             Benchmark.timerStart(timerName);
             conn = (HttpURLConnection) u.openConnection();
-            Log.debug("Timing url open connect " + Benchmark.timerStop() + " " + url);
+            Log.debug("Timing url open connect " + Benchmark.timerStop(timerName) + " " + url);
         } catch (TimeException e) {
             e.printStackTrace();
         }
