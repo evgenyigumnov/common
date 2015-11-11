@@ -1,6 +1,7 @@
 package com.igumnov.common;
 
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.ByteArrayOutputStream;
@@ -15,6 +16,13 @@ public class JSON {
     public static String toString(Object o) throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         mapper.writeValue(baos, o);
+        return new String(baos.toByteArray());
+    }
+    public static String toStringExcludeNullFields(Object o) throws IOException {
+        ObjectMapper m = new ObjectMapper();
+        m.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        m.writeValue(baos, o);
         return new String(baos.toByteArray());
     }
 
